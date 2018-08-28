@@ -31,6 +31,6 @@ update:
 		--zip-file fileb://$(handler).zip
 
 clean:
-	rm -rf $(handler) $(handler).zip
+	rm -f $(handler) $(handler).zip
 
 .PHONY: all build deploy update clean
