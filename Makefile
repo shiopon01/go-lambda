@@ -1,6 +1,6 @@
 function = go-test
 handler = main
-role = arn:aws:iam::123456789012:role/service-role/myLambdarole
+role = arn:aws:iam::123456789012:role/myLambdarole
 
 all: compress
 compress:
@@ -12,6 +12,7 @@ deploy:
 	GOOS=linux go build -o $(handler) $(handler).go
 	zip $(handler).zip $(handler)
 	rm $(handler)
+
 	aws lambda create-function \
 		--function-name $(function) \
 		--zip-file fileb://$(handler).zip \
@@ -24,6 +25,7 @@ update:
 	GOOS=linux go build -o $(handler) $(handler).go
 	zip $(handler).zip $(handler)
 	rm $(handler)
+
 	aws lambda update-function-code \
 		--function-name $(function) \
 		--zip-file fileb://$(handler).zip
