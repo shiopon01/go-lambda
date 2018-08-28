@@ -15,7 +15,7 @@ type Event struct {
 
 // Response is structure of response
 type Response struct {
-	TellYou string `json:"Message:"`
+	TellYou string `json:"Message"`
 }
 
 // LambdaHandler ...
