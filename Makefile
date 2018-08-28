@@ -1,17 +1,34 @@
-all: compress
+function = go-test
+handler = main
+role = arn:aws:iam::123456789012:role/service-role/myLambdarole
 
+all: compress
 compress:
-	GOOS=linux go build hello.go
-	zip hello.zip ./hello
+	GOOS=linux go build -o $(handler) $(handler).go
+	zip $(handler).zip $(handler)
+	rm $(handler)
 
 deploy:
+	GOOS=linux go build -o $(handler) $(handler).go
+	zip $(handler).zip $(handler)
+	rm $(handler)
 	aws lambda create-function \
-		--function-name go-test2 \
+		--function-name $(function) \
+		--zip-file fileb://$(handler).zip \
+		--role $(role) \
 		--memory 128 \
-		--runtime go1.x \
-		--zip-file ./hello.zip
+		--handler $(handler) \
+		--runtime go1.x
+
+update:
+	GOOS=linux go build -o $(handler) $(handler).go
+	zip $(handler).zip $(handler)
+	rm $(handler)
+	aws lambda update-function-code \
+		--function-name $(function) \
+		--zip-file fileb://$(handler).zip
 
 clean:
-	rm hello hello.zip
+	rm -rf $(handler) $(handler).zip
 
-.PHONY: all build deploy clean
+.PHONY: all build deploy update clean
